@@ -86,23 +86,85 @@ class LinkedList
     current
   end
 
-  list = LinkedList.new
-  list.append(1)
-  list.append(2)
-  list.prepend(0)
-  list.display
+  def pop
+    return nil if @head.nil?
 
-  puts "Size: #{list.size}"
-  puts "Head: #{list.head.value}"
-  puts "Tail: #{list.tail.value}"
+    if @head.next_node.nil?
+      value = @head.value
+      @head = nil
+      return value
+    end
 
-  puts "Enter the index to retrieve the node value:"
-  index = gets.chomp.to_i
+    current = @head
+    previous = nil
 
-  node = list.at(index)
-  if node.nil?
-    puts "Node at index #{index} does not exist."
-  else
-    puts "Node at index #{index}: #{node.value}"
+    while !current.next_node.nil?
+      previous = current
+      current = current.next_node
+    end
+
+    value = current.value
+    previous.next_node = nil
+    value
   end
+
+  def contains?(value)
+    current = @head
+    while !current.nil?
+      return true if current.value == value
+      current = current.next_node
+    end
+    false
+  end
+
+  def find(value)
+    current = @head
+    index = 0
+    while !current.nil?
+      return index if current.value == value
+      current = current.next_node
+      index += 1
+    end
+    nil
+  end
+end
+
+list = LinkedList.new
+list.append(1)
+list.append(2)
+list.prepend(0)
+list.display
+
+puts "Size: #{list.size}"
+puts "Head: #{list.head.value}"
+puts "Tail: #{list.tail.value}"
+
+puts "Enter the index to retrieve the node value:"
+index = gets.chomp.to_i
+
+node = list.at(index)
+if node.nil?
+  puts "Node at index #{index} does not exist."
+else
+  puts "Node at index #{index}: #{node.value}"
+end
+
+popped_value = list.pop
+puts "Popped Value: #{popped_value}"
+
+puts "Enter a value to check if it is in the list:"
+value_to_find = gets.chomp.to_i
+if list.contains?(value_to_find)
+  puts "#{value_to_find} is in the list."
+else
+  puts "#{value_to_find} is not in the list."
+end
+
+puts "Enter a value to find its index:"
+value_to_search = gets.chomp.to_i
+index = list.find(value_to_search)
+if index.nil?
+  puts "#{value_to_search} is not found in the list."
+else
+  puts "#{value_to_search} is at index #{index}."
 end
