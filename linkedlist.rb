@@ -52,13 +52,6 @@ class LinkedList
     count
   end
 
-  def display
-    current = @head
-    while !current.nil?
-      puts current.value
-      current = current.next_node
-    end
-  end
 
   def head
     @head
@@ -127,13 +120,78 @@ class LinkedList
     end
     nil
   end
+
+  def to_s
+    return 'nil' if @head.nil?
+
+    current = @head
+    result = ''
+    while current
+      result += "( #{current.value} ) -> "
+      current = current.next_node
+    end
+    result += 'nil'
+    result
+  end
+
+  def insert_at(value, index)
+    return prepend(value) if index.zero?
+
+    new_node = Node.new(value)
+    current = @head
+    previous = nil
+    i = 0
+
+    while i < index && !current.nil?
+      previous = current
+      current = current.next_node
+      i += 1
+    end
+
+    if current.nil? && i == index
+      # Append the new node at the end of the list
+      previous.next_node = new_node
+    elsif i == index
+      previous.next_node = new_node
+      new_node.next_node = current
+    else
+      puts "Invalid index. Node at index #{index} does not exist."
+    end
+  end
+
+  def remove_at(index)
+    return if @head.nil? || index < 0
+
+    if index.zero?
+      @head = @head.next_node
+      return
+    end
+
+    current = @head
+    previous = nil
+    i = 0
+
+    while i < index && !current.nil?
+      previous = current
+      current = current.next_node
+      i += 1
+    end
+
+    return if current.nil?
+
+    if current.next_node.nil?
+      # If the last element is being removed, update the tail.
+      previous.next_node = nil
+    else
+      previous.next_node = current.next_node
+    end
+  end
 end
 
 list = LinkedList.new
 list.append(1)
 list.append(2)
 list.prepend(0)
-list.display
 
 puts "Size: #{list.size}"
 puts "Head: #{list.head.value}"
@@ -168,3 +226,17 @@ if index.nil?
 else
   puts "#{value_to_search} is at index #{index}."
 end
+
+puts "Linked List representation: #{list}"
+
+puts "Enter a value to insert in the list:"
+value_to_insert = gets.chomp.to_i
+puts "Enter the index to insert the value:"
+index_to_insert = gets.chomp.to_i
+list.insert_at(value_to_insert, index_to_insert)
+puts "Updated Linked List: #{list}"
+
+puts "Enter the index to remove a node from the list:"
+index_to_remove = gets.chomp.to_i
+list.remove_at(index_to_remove)
+puts "Updated Linked List: #{list}"
