@@ -127,10 +127,10 @@ class LinkedList
     current = @head
     result = ''
     while current
-      result += "( #{current.value} ) -> "
+      result += "( #{current.value} ) -> " unless current.next_node.nil?
+      result += "( #{current.value} )" if current.next_node.nil?
       current = current.next_node
     end
-    result += 'nil'
     result
   end
 
